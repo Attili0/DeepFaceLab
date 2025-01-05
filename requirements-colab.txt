@@ -9,3 +9,5 @@ scipy
 colorama
 tensorflow
 tf2onnx
+
+protobuf>=4.21.6
