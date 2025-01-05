@@ -231,8 +231,8 @@ class ExtractSubprocessor(Subprocessor):
 
                     landmarks_bbox = LandmarksProcessor.transform_points ( [ (0,0), (0,image_size-1), (image_size-1, image_size-1), (image_size-1,0) ], image_to_face_mat, True)
 
-                    rect_area      = mathlib.polygon_area(np.array(rect[[0,2,2,0]]).astype(np.float32), np.array(rect[[1,1,3,3]]).astype(np.float32))
-                    landmarks_area = mathlib.polygon_area(landmarks_bbox[:,0].astype(np.float32), landmarks_bbox[:,1].astype(np.float32) )
+                    rect_area      = mathlib.polygon_area(np.array(rect[[0,2,2,0]]).astype(float32), np.array(rect[[1,1,3,3]]).astype(float32))
+                    landmarks_area = mathlib.polygon_area(landmarks_bbox[:,0].astype(float32), landmarks_bbox[:,1].astype(float32) )
 
                     if not data.manual and face_type <= FaceType.FULL_NO_ALIGN and landmarks_area > 4*rect_area: #get rid of faces which umeyama-landmark-area > 4*detector-rect-area
                         continue
@@ -535,8 +535,8 @@ class ExtractSubprocessor(Subprocessor):
                             break
 
                         if self.force_landmarks:
-                            pt2 = np.float32([new_x, new_y])
-                            pt1 = np.float32([self.x, self.y])
+                            pt2 = float32([new_x, new_y])
+                            pt1 = float32([self.x, self.y])
 
                             pt_vec_len = npla.norm(pt2-pt1)
                             pt_vec = pt2-pt1
@@ -550,7 +550,7 @@ class ExtractSubprocessor(Subprocessor):
                                           int(self.y+self.rect_size) )
 
                             if pt_vec_len > 0:
-                                lmrks = np.concatenate ( (np.zeros ((17,2), np.float32), LandmarksProcessor.landmarks_2D), axis=0 )
+                                lmrks = np.concatenate ( (np.zeros ((17,2), float32), LandmarksProcessor.landmarks_2D), axis=0 )
                                 lmrks -= lmrks[30:31,:]
                                 mat = cv2.getRotationMatrix2D( (0, 0), -np.arctan2( pt_vec[1], pt_vec[0] )*180/math.pi , pt_vec_len)
                                 mat[:, 2] += (self.x, self.y)
@@ -601,8 +601,8 @@ class ExtractSubprocessor(Subprocessor):
         else:
             image = self.image.copy()
 
-        view_rect = (np.array(self.rect) * self.view_scale).astype(np.int).tolist()
-        view_landmarks  = (np.array(self.landmarks) * self.view_scale).astype(np.int).tolist()
+        view_rect = (np.array(self.rect) * self.view_scale).astype(int).tolist()
+        view_landmarks  = (np.array(self.landmarks) * self.view_scale).astype(int).tolist()
 
         if self.rect_size <= 40:
             scaled_rect_size = h // 3 if w > h else w // 3
@@ -616,7 +616,7 @@ class ExtractSubprocessor(Subprocessor):
             np2 = (w / 2 + wh / 4, h / 2 - wh / 4)
             np3 = (w / 2 - wh / 4, h / 2 + wh / 4)
 
-            mat = cv2.getAffineTransform( np.float32([p1,p2,p3])*self.view_scale, np.float32([np1,np2,np3]) )
+            mat = cv2.getAffineTransform( float32([p1,p2,p3])*self.view_scale, float32([np1,np2,np3]) )
             image = cv2.warpAffine(image, mat,(w,h) )
             view_landmarks = LandmarksProcessor.transform_points (view_landmarks, mat)
 
