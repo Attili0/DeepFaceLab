@@ -7,5 +7,5 @@ ffmpeg-python
 scikit-image
 scipy
 colorama
-tensorflow-gpu
+tensorflow-gpu==2.12.0
 tf2onnx
